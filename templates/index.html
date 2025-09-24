@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+<main class="flex-1">
+  <section class="hero-section">
+    <div class="canvas-container"
+         id="canvas-container"
+                  data-mountain-url="{% static 'images/mountain.png' %}"
+         data-moon-url="{% static 'images/moon.jpg' %}">
+
+    </div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">نوآوری، فراتر از مرزهای دیجیتال</h1>
+        <p class="hero-description">
+          به کمک ما هویت دیجیتال خود را خلق کنید <br/>
+        </p>
+        <!-- <div class="hero-buttons">
+          <button class="btn btn-primary">Begin Mission</button>
+          <button class="btn btn-outline">Learn More</button>
+        </div> -->
+      </div>
+    </div>
+  </section>
+
+
+ <section class="about-section" id="about">
+        <!-- Section Header -->
+        <div class="section-header-about">
+            <h1 class="section-title-about">About Us</h1>
+            <p class="section-subtitle-about">Innovating beyond limits. Exploring the unknown. Building the future.</p>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content-about">
+            <!-- Text Block -->
+            <div class="text-block-about">
+                <p class="about_explain">LUNOTECH stands at the intersection of cosmic exploration and technological innovation. We pioneer solutions that transcend today's boundaries, creating tomorrow's possibilities through advanced research and visionary engineering.</p>
+            </div>
+          </div>
+    </section>
+
+  
+  <section class="services-section"id="services">
+    <div class="ambient-bg"></div>
+    <div class="ambient-light-1"></div>
+    <div class="ambient-light-2"></div>
+    <div class="container-services">
+      <div class="header-services">
+        <h2 class="header_services_title" >خدمات ما برای رشد کسب‌وکار شما</h2>
+      </div>
+      <div class="services-grid" id="servicesGrid">
+        
+        </div>
+    </div>
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal-content" id="modalContent">
+        <button class="close-btn" id="closeBtn">×</button>
+        <div class="modal-body" id="modalBody">
+          </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee-container">
+    <div class="gradient-overlay"></div>
+    <div class="marquee-content" id="marqueeContent">
+      </div>
+  </div>
+
+  <section class="grok-blog-section">
+    <div class="grok-blog-container">
+      <div class="grok-blog-header grok-blog-fade-in">
+        <div class="grok-blog-header-content">
+          <h1 class="grok-blog-main-title">آخرین اخبار و رویدادها</h1>
+          <a class="grok-blog-explore-btn" href="{% url 'blog_list' %}">مشاهده همه اخبار</a>
+        </div>
+      </div>
+      <div class="grok-blog-posts">
+        {% for post in posts %}
+        <article class="grok-blog-post grok-blog-slide-up">
+          <div class="grok-blog-top-line"></div>
+          <div class="grok-blog-post-grid">
+            <div class="grok-blog-post-content">
+              <div class="grok-blog-post-date">{{ post.date|date:"Y-m-d" }}</div>
+              <h2 class="grok-blog-post-title">
+                <span class="lang-fa">{{ post.title_fa }}</span>
+                <span class="lang-en">{{ post.title_en }}</span>
+              </h2>
+              <p class="grok-blog-post-description">
+                <span class="lang-fa">{{ post.subtitle_fa|truncatechars:220 }}</span>
+                <span class="lang-en">{{ post.subtitle_en|truncatechars:220 }}</span>
+              </p>
+              <div class="grok-blog-post-footer">
+                <a class="grok-blog-read-btn" href="{{ post.get_absolute_url }}">
+                  <span class="lang-fa">اطلاعات بیشتر</span>
+                  <span class="lang-en">click for more</span>
+                </a>
+              </div>
+            </div>
+            <div class="grok-blog-post-image">
+              <div class="grok-blog-image-container">
+                {% if post.image %}
+                <img alt="{{ post.title }}" src="{{ post.image.url }}"/>
+                {% endif %}
+                <div class="grok-blog-gradient-overlay grok-blog-gradient-purple"></div>
+                <div class="grok-blog-dark-overlay"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+        {% empty %}
+        <p>مطلبی ثبت نشده است.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

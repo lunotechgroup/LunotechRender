@@ -1,0 +1,776 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+
+
+
+
+        /* Header Styles */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 1rem;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.2);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Logo */
+.logo-img {
+  height: 2rem;
+  width: 2rem;
+}
+
+/* Navigation Items */
+.nav-items {
+  display: none;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  color: white;
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.dropdown-trigger:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 125%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: rgba(15, 23, 42, 0.2);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  min-width: 120px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s;
+}
+
+.dropdown.active .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+} 
+
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Desktop Actions */
+.desktop-actions {
+  display: none;
+}
+
+.contact-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.contact-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+  display: block;
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.menu-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.hidden {
+  display: none;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 320px;
+  background: rgba(15, 23, 42, 0.2);
+  backdrop-filter: blur(12px);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: -25px 0 50px -12px rgba(0, 0, 0, 0.25);
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  z-index: 60;
+}
+
+.mobile-menu.active {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.mobile-menu-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mobile-menu-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+}
+
+.mobile-close-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mobile-close-btn:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-nav-items {
+  padding: 0 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mobile-nav-item {
+  background: none;
+  border: 1px solid transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.125rem;
+  font-weight: 500;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: left;
+}
+
+.mobile-nav-item:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-nav-item.active {
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-actions {
+  margin-top: 3rem;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mobile-contact-btn {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-contact-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.02);
+}
+
+/* Mobile Dropdown */
+.mobile-dropdown {
+  position: relative;
+}
+
+.mobile-dropdown-trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.mobile-dropdown-trigger:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
+}
+
+.mobile-dropdown-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-top:1rem;
+  background: rgba(15, 23, 42, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0px);
+  transition: all 0.2s;
+}
+
+.mobile-dropdown.active .mobile-dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.mobile-dropdown-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mobile-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile Overlay */
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+  z-index: 40;
+}
+
+.mobile-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Main Content */
+.main-content {
+  padding-top: 6rem;
+  padding: 6rem 1rem 2rem;
+}
+
+/* Responsive Design */
+@media (min-width: 800px) {
+  .nav-items {
+    display: flex;
+  }
+
+  .desktop-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .mobile-menu-btn {
+    display: none;
+  }
+
+  .mobile-menu,
+  .mobile-overlay {
+    display: none;
+  }
+}
+        .grok-blog-section {
+            min-height: 100vh;
+            padding: 3rem 1rem;
+        }
+
+        .grok-blog-container {
+            max-width: 1220px;
+            margin: 5rem auto 0rem auto;
+        }
+
+        /* Header Styles */
+        .grok-blog-header {
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .grok-blog-header.grok-blog-fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .grok-blog-label {
+            font-family: "Courier New", monospace;
+            font-size: 0.875rem;
+            color: #666;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+        }
+
+        .grok-blog-header-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 10%;
+        }
+
+        .grok-blog-main-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #ffffff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .grok-blog-explore-btn {
+            align-self: flex-start;
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: 1px solid #333;
+            color: #ffffff;
+            border-radius: 9999px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .grok-blog-explore-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Blog Posts */
+        .grok-blog-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 6rem;
+        }
+
+        .grok-blog-post {
+            border-bottom: 1px solid #333;
+            padding-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .grok-blog-post:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .grok-blog-post.grok-blog-slide-up {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modified grid to show full content layout */
+        .grok-blog-post-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .grok-blog-post-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .grok-blog-post-meta {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .grok-blog-post-date {
+            font-family: "Courier New", monospace;
+            font-size: 0.875rem;
+            color: #888;
+            letter-spacing: 0.1em;
+        }
+
+        .grok-blog-post-category {
+            font-family: "Courier New", monospace;
+            font-size: 0.75rem;
+            color: #666;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid #333;
+            border-radius: 9999px;
+        }
+
+        .grok-blog-post-title {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Added hero image styles */
+        .grok-blog-hero-image {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .grok-blog-hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .grok-blog-gradient-overlay {
+            position: absolute;
+            inset: 0;
+            opacity: 0.3;
+        }
+
+        .grok-blog-gradient-purple {
+            background: linear-gradient(135deg, #9333ea, #3b82f6, #06b6d4);
+        }
+
+        .grok-blog-gradient-blue {
+            background: linear-gradient(135deg, #1d4ed8, #4338ca, #3b82f6);
+        }
+
+        .grok-blog-gradient-orange {
+            background: linear-gradient(135deg, #f97316, #ef4444, #ec4899);
+        }
+
+        .grok-blog-dark-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent, transparent);
+        }
+
+        /* Added full article content styles */
+        .grok-blog-article-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .grok-blog-post-description {
+            font-size: 1.25rem;
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .grok-blog-article-text {
+            font-size: 1.125rem;
+            color: #e5e5e5;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .grok-blog-article-text h3 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            font-weight: 600;
+            margin: 2.5rem 0 1rem 0;
+        }
+
+        .grok-blog-article-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        .grok-blog-article-text ul {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+
+        .grok-blog-article-text li {
+            margin-bottom: 0.5rem;
+            color: #ccc;
+        }
+
+        .grok-blog-quote {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #666;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: #ccc;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Added author and sharing section */
+        .grok-blog-post-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #374151;
+        }
+
+        .grok-blog-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .grok-blog-author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9333ea, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .grok-blog-author-info h4 {
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .grok-blog-author-info p {
+            color: #888;
+            font-size: 0.875rem;
+        }
+
+        .grok-blog-share {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .grok-blog-share-label {
+            font-family: "Courier New", monospace;
+            font-size: 0.875rem;
+            color: #666;
+            letter-spacing: 0.1em;
+        }
+
+        .grok-blog-share-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .grok-blog-share-btn {
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px solid #333;
+            color: #888;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .grok-blog-share-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-color: #666;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 640px) {
+            .grok-blog-header-content {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .grok-blog-explore-btn {
+                align-self: auto;
+            }
+
+            .grok-blog-post-footer {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .grok-blog-section {
+                padding: 3rem 2rem;
+            }
+
+            .grok-blog-posts {
+                gap: 8rem;
+            }
+
+            .grok-blog-post {
+                padding-bottom: 5rem;
+            }
+
+            .grok-blog-top-line {
+                margin-bottom: 4rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .grok-blog-section {
+                padding: 3rem 4rem;
+            }
+
+            .grok-blog-post-description {
+                font-size: 1.375rem;
+            }
+
+            .grok-blog-article-text {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Animation Classes */
+        .grok-blog-fade-in {
+            animation: grokBlogFadeIn 0.6s ease forwards;
+        }
+
+        .grok-blog-slide-up {
+            animation: grokBlogSlideUp 0.6s ease forwards;
+        }
+
+        @keyframes grokBlogFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes grokBlogSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .footer{
+            margin: 0;
+        }
+        .footer-top{
+            padding: 0;
+        }

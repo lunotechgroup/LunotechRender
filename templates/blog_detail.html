@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ post.title }} - Blog - Lunotech{% endblock %}
+{% block head_extra %}
+  <link rel="stylesheet" href="{% static 'css/blog_detail.css' %}">
+{% endblock %}
+{% block content %}
+
+
+<section class="grok-blog-section">
+        <div class="grok-blog-container">
+
+
+            <div class="grok-blog-posts">
+                <!-- Converted to full detailed articles -->
+                <article class="grok-blog-post grok-blog-slide-up" data-index="0">
+                    <div class="grok-blog-top-line"></div>
+                    <div class="grok-blog-post-grid">
+                        <div class="grok-blog-post-content">
+                            <div class="grok-blog-post-meta">
+                                <div class="grok-blog-post-date">{{ post.date|date:"Y-m-d" }}</div>
+                                <span class="grok-blog-post-category">{{ post.creator_job_title }}</span>
+                            </div>
+                            <h2 class="grok-blog-post-title">{{ post.title }}</h2>
+                            {% if post.image %}
+                            <div class="grok-blog-hero-image">
+                                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                <div class="grok-blog-gradient-overlay grok-blog-gradient-purple"></div>
+                                <div class="grok-blog-dark-overlay"></div>
+                            </div>
+                            {% endif %}
+                            <div class="grok-blog-article-content">
+                                <p class="grok-blog-post-description">
+                                    {{ post.description|linebreaks }}
+                                </p>
+                                
+                                <div class="grok-blog-article-text">
+                                    <p>Today marks a pivotal moment in the evolution of artificial intelligence. Grok 4, our most advanced model to date, is now available to SuperGrok and Premium+ subscribers, as well as through the xAI API. This groundbreaking release sets new standards for AI intelligence and capability.</p>
+
+                                    <h3>Revolutionary Features</h3>
+                                    <p>Grok 4 introduces several game-changing capabilities that distinguish it from previous generations:</p>
+                                    
+                                    <ul>
+                                        <li><strong>Native Tool Use:</strong> Seamlessly integrate with external tools and APIs without complex setup</li>
+                                        <li><strong>Real-time Search:</strong> Access up-to-the-minute information from across the web</li>
+                                        <li><strong>Advanced Reasoning:</strong> Solve complex problems with unprecedented logical depth</li>
+                                        <li><strong>Multimodal Understanding:</strong> Process text, images, and code with equal proficiency</li>
+                                    </ul>
+
+                                    <div class="grok-blog-quote">
+                                        "Grok 4 doesn't just process information—it understands context, anticipates needs, and provides solutions that feel genuinely intelligent."
+                                    </div>
+
+                                    <h3>Performance Benchmarks</h3>
+                                    <p>In comprehensive testing across multiple domains, Grok 4 has demonstrated superior performance in reasoning tasks, creative problem-solving, and technical analysis. The model's ability to maintain context across extended conversations while providing accurate, relevant responses represents a significant advancement in conversational AI.</p>
+
+                                    <p>The integration of real-time search capabilities means that Grok 4 can provide current information on rapidly evolving topics, making it an invaluable tool for research, analysis, and decision-making in dynamic environments.</p>
+                                </div>
+                            </div>
+
+                            <div class="grok-blog-post-footer">
+                                <div class="grok-blog-author">
+                                    <div class="grok-blog-author-avatar">XA</div>
+                                    <div class="grok-blog-author-info">
+                                        <h4>{{ post.creator_name }}</h4>
+                                    </div>
+                                </div>
+                                <div class="grok-blog-share">
+                                    <span class="grok-blog-share-label">SHARE</span>
+                                    <div class="grok-blog-share-buttons">
+                                        <a href="#" class="grok-blog-share-btn">📧</a>
+                                        <a href="#" class="grok-blog-share-btn">🔗</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
