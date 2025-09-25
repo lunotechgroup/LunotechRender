@@ -2556,7 +2556,7 @@ html {
           color: white;
         }
         .main-container-blog{
-          margin-top: 6rem;
+          margin-top: 5rem;
         }
 /* --- Multilingual Content Switcher --- */
 
@@ -2703,4 +2703,60 @@ html[lang="en"] .lang-fa {
   to {
       transform: rotateZ(0deg) rotateX(65deg) rotateY(360deg);
   }
+}
+
+/* --- Mobile Typography Overrides --- */
+/* These rules will apply only on screens 768px wide or smaller */
+@media (max-width: 768px) {
+
+    /* --- Hero Section --- */
+    .hero-title {
+        font-size: 2.5rem; /* Reduced from the larger clamp() value */
+        line-height: 1.2;
+    }
+
+    .hero-description {
+        font-size: 1rem; /* Reduced for better readability */
+    }
+
+    /* --- About Section --- */
+    .about-title {
+        font-size: 2.25rem;
+    }
+
+    .about-description {
+        font-size: 1rem;
+    }
+
+    /* --- Services Section --- */
+    .header-services h2 {
+        font-size: 2.25rem;
+    }
+
+    .service-title {
+        font-size: 1.25rem;
+    }
+
+    /* --- Blog Section (Home Page) --- */
+    .grok-blog-main-title {
+        font-size: 2.25rem;
+    }
+    
+    .grok-blog-post-title {
+        font-size: 1.5rem;
+    }
+
+    /* --- Blog List Page --- */
+    .main-container-blog .grok-blog-main-title {
+        font-size: 2.5rem;
+    }
+
+    .blog-title {
+        font-size: 1.1rem;
+    }
+
+    /* --- Footer --- */
+    .large-text {
+        font-size: 4rem; /* Reduced from 8rem+ */
+    }
 }
