@@ -1,5 +1,7 @@
+// Lunotech/static/js/script.js
+
 // ==========================
-//  THREE.js Scene (no change)
+//  THREE.js Scene
 // ==========================
 class LunarExplorer {
   constructor() {
@@ -24,7 +26,7 @@ class LunarExplorer {
     this.checkReducedMotion();
     this.setupScene();
     this.createStarfield();
-    this.loadAssets(); // This will now use the LoadingManager
+    this.loadAssets();
     this.setupLighting();
     this.setupEventListeners();
     this.animate();
@@ -42,7 +44,8 @@ class LunarExplorer {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
 
-    this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    // Camera FOV is set to 45
+    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera.position.set(0, 0, 6);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -91,58 +94,24 @@ class LunarExplorer {
 
     manager.onLoad = () => {
       this.assetsLoaded = true;
-      this.hideLoadingScreen(); // Hide loading screen after all assets are loaded
+      this.hideLoadingScreen();
       this.animateMoonRise();
     };
 
-    const textureLoader = new THREE.TextureLoader(manager); // Pass the manager to the loader
+    const textureLoader = new THREE.TextureLoader(manager);
 
-    // Load Moon Texture
     textureLoader.load(
-      this.moonUrl, // Moon texture URL
-      (texture) => {
-        this.createMoon(texture);
-      },
-      undefined, // onProgress handled by manager
-      (error) => {
-        console.error("Failed to load moon texture:", error);
-        // Fallback to procedural texture if image fails to load
-        const canvas = document.createElement("canvas");
-        canvas.width = 512;
-        canvas.height = 512;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          const imageData = ctx.createImageData(512, 512);
-          const data = imageData.data;
-          for (let i = 0; i < data.length; i += 4) {
-            const x = (i / 4) % 512;
-            const y = Math.floor(i / 4 / 512);
-            const noise = Math.sin(x * 0.02) * Math.cos(y * 0.02) * 0.5 + 0.5;
-            const craters = Math.sin(x * 0.1) * Math.sin(y * 0.1) * 0.3 + 0.7;
-            const base = 0.4;
-            const gray = Math.floor((base + noise * 0.3 + craters * 0.3) * 255);
-            data[i] = gray;
-            data[i + 1] = gray;
-            data[i + 2] = gray;
-            data[i + 3] = 255;
-          }
-          ctx.putImageData(imageData, 0, 0);
-        }
-        this.createMoon(new THREE.CanvasTexture(canvas));
-      }
+      this.moonUrl,
+      (texture) => { this.createMoon(texture); },
+      undefined,
+      (error) => { console.error("Failed to load moon texture:", error); }
     );
 
-    // Load Mountain Texture
     textureLoader.load(
-      this.mountainUrl, // Generated transparent mountain texture URL
-      (texture) => {
-        this.createMountain(texture);
-      },
-      undefined, // onProgress handled by manager
-      (error) => {
-        console.warn("Failed to load mountain texture. Mountain will not be rendered.", error);
-        // No mountain created if texture fails
-      }
+      this.mountainUrl,
+      (texture) => { this.createMountain(texture); },
+      undefined,
+      (error) => { console.warn("Failed to load mountain texture.", error); }
     );
   }
 
@@ -164,29 +133,24 @@ class LunarExplorer {
     this.moon = new THREE.Mesh(geometry, material);
     this.moon.castShadow = true;
     this.moon.receiveShadow = true;
-
-    // Set initial position for the moon behind the mountain and a bit lower
-    this.moon.position.set(0, -3, -1); // Lower Y value to make it seem lower in the scene initially
-    this.moon.scale.set(0, 0, 0); // Start the scale small
+    this.moon.position.set(0, -3, -1);
+    this.moon.scale.set(0, 0, 0);
     this.scene.add(this.moon);
   }
 
   createMountain(mountainTexture) {
-    const aspectRatio = mountainTexture.image.width / mountainTexture.image.height;
-    const planeHeight = 2; // Increase the height to make the mountain taller
-    const planeWidth = planeHeight * aspectRatio;
-
-    const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
+    const geometry = new THREE.PlaneGeometry(1, 1);
     const material = new THREE.MeshBasicMaterial({
       map: mountainTexture,
       transparent: true,
       alphaTest: 0.1,
     });
 
-    // Position the mountain at the bottom of the scene and slightly in front of the moon
     this.mountain = new THREE.Mesh(geometry, material);
-    this.mountain.position.set(0, 0, 4); // Adjusted to be more forward in the scene
     this.scene.add(this.mountain);
+
+    // Set the initial size and position correctly by calling onWindowResize
+    this.onWindowResize();
   }
 
   animateMoonRise() {
@@ -195,8 +159,6 @@ class LunarExplorer {
 
     if (!this.prefersReducedMotion) {
       const tl = gsap.timeline();
-
-      // Animate the moon to rise from behind the mountain
       tl.to(this.moon.scale, {
         x: 0.765,
         y: 0.765,
@@ -207,15 +169,14 @@ class LunarExplorer {
         this.moon.position,
         {
           x: 0,
-          y: 0, // Adjusted to rise above the mountain
-          z: 0, // Position the moon closer to the camera
+          y: 0,
+          z: 0,
           duration: 4,
           ease: "power3.out",
         },
         0
-      ); // Start at the same time as scale animation
+      );
     } else {
-      // Final state for reduced motion
       this.moon.scale.set(0.765, 0.765, 0.765);
       this.moon.position.set(0, 0, 0);
     }
@@ -231,10 +192,6 @@ class LunarExplorer {
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
     this.scene.add(directionalLight);
-
-    const pointLight = new THREE.PointLight(0x4a90e2, 0.3);
-    pointLight.position.set(-10, -10, -10);
-    this.scene.add(pointLight);
   }
 
   setupEventListeners() {
@@ -242,12 +199,41 @@ class LunarExplorer {
   }
 
   onWindowResize() {
-    if (this.camera && this.renderer) {
-      this.camera.aspect = window.innerWidth / window.innerHeight;
-      this.camera.updateProjectionMatrix();
-      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    if (!this.camera || !this.renderer) return;
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
+
+    if (this.mountain && this.mountain.material.map && this.mountain.material.map.image) {
+        const texture = this.mountain.material.map;
+        const imgAspect = texture.image.width / texture.image.height;
+        const viewAspect = width / height;
+
+        // Get the visible height of the viewport at the mountain's Z-depth
+        const vFOV = THREE.MathUtils.degToRad(this.camera.fov);
+        const visibleHeight = 2 * Math.tan(vFOV / 2) * Math.abs(this.camera.position.z - this.mountain.position.z);
+        const visibleWidth = visibleHeight * this.camera.aspect;
+
+        // This logic mimics CSS 'background-size: cover'
+        if (viewAspect > imgAspect) {
+            // Viewport is wider than the image: scale to fit viewport width
+            this.mountain.scale.x = visibleWidth;
+            this.mountain.scale.y = visibleWidth / imgAspect;
+        } else {
+            // Viewport is taller than the image: scale to fit viewport height
+            this.mountain.scale.y = visibleHeight;
+            this.mountain.scale.x = visibleHeight * imgAspect;
+        }
+
+        // Always align the mountain to the bottom of the screen
+        this.mountain.position.y = (-visibleHeight / 2);
+        this.mountain.position.z = 2; // Keep mountain in front
     }
-  }
+}
 
   hideLoadingScreen() {
     const loadingScreen = document.getElementById("loading-screen");
@@ -255,7 +241,7 @@ class LunarExplorer {
       loadingScreen.classList.add("hidden");
       setTimeout(() => {
         loadingScreen.style.display = "none";
-      }, 500); // Match CSS transition duration
+      }, 500);
     }
   }
 
@@ -280,6 +266,7 @@ class LunarExplorer {
 document.addEventListener("DOMContentLoaded", () => {
   new LunarExplorer();
 });
+
 
 // ===========================================
 //  Header (with i18n for FA/EN & persistence)
@@ -319,15 +306,15 @@ const I18N = {
     btn_outline:" ",
     header_services_title:"Services",
     services_cards: [
-                          { 
+                          {
                             icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                               <circle cx="12" cy="12" r="3"/>
                               <path d="M12 1v6m0 6v6"/>
                               <path d="m21 12-6-3-6 3-6-3"/>
                               <path d="m21 12-6 3-6-3-6 3"/>
                               <path d="m12 1 6 3-6 3-6-3z"/>
-                          </svg>`, 
-                            title:"Brand & Visual Identity", 
+                          </svg>`,
+                            title:"Brand & Visual Identity",
                             description:"We create a unique visual identity for your business that tells your story and captures the attention of your customers.",
                             details: {
                               fullDescription: "Your visual identity is the first point of contact with a customer. With a deep understanding of your business and audience, we design a cohesive identity system—including your logo, color palette, and typography—to ensure your brand looks professional and unified across all platforms.",
@@ -341,15 +328,15 @@ const I18N = {
                               applications: "Increased Brand Recognition & Credibility , Attracting Loyal Customers , Attracting Loyal Customers"
                             }
                           },
-                          { 
+                          {
                             icon:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                               <path d="M13 7L9 3 5 7l4 4 4-4z"/>
                               <path d="m17 11 4 4-4 4-4-4 4-4z"/>
                               <path d="m8 12 4 4 6-6-4-4Z"/>
                               <path d="m16 8 3-3"/>
                               <path d="M9 21a6 6 0 0 0-6-6"/>
-                          </svg>`, 
-                            title:"Website Design & Development", 
+                          </svg>`,
+                            title:"Website Design & Development",
                             description:"Your website is the center of your digital world. We design responsive, fast, and user-friendly websites that convert visitors into customers.",
                             details: {
                               fullDescription: "We go beyond beautiful visuals to prioritize an exceptional user experience (UX) and user interface (UI). Your website will be built to achieve your specific business goals—whether it's sales, lead generation, or showcasing services—using the latest technologies for flawless performance on all devices.",
@@ -362,14 +349,14 @@ const I18N = {
                               applications: "Increased Sales & Lead Generation , Professional Showcase of Your Services , 24/7 Availability for Your Customers"
                             }
                           },
-                          { 
+                          {
                             icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                               <path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/>
                               <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/>
                               <path d="M10 9a3 3 0 0 0 0 6"/>
                               <path d="M14 9a3 3 0 0 1 0 6"/>
-                          </svg>`, 
-                            title:"Intelligent Automation & Bots", 
+                          </svg>`,
+                            title:"Intelligent Automation & Bots",
                             description:"Automate your repetitive business processes. We design intelligent bots that increase your efficiency and provide 24/7 service to your customers.",
                             details: {
                               fullDescription: "Your time is your most valuable asset. By building intelligent chatbots for your website and social media, we automate customer support, appointment booking, and data collection. This allows your team to focus on more important tasks and reduces operational costs.",
@@ -406,8 +393,29 @@ const I18N = {
         search_placeholder:"search",
         section_title_about:"ABOUT US",
         section_subtitle_about:"",
-        about_explain:"Lunotech is a digital design studio dedicated to building and developing purposeful and integrated digital identities. Our work encompasses two primary domains: brand architecture and web development, through which we help businesses establish an authentic and impactful online presence. We offer a comprehensive suite of services, ranging from defining brand strategy, logo design, and brand book creation to meticulous user interface (UI/UX) design and the implementation of complex, custom websites. We believe that a successful digital experience is the result of the intelligent intersection of aesthetics, flawless functionality, and transparent strategy. Our approach to every project is a research-based and collaborative process, beginning with a deep understanding of the client's objectives and concluding with the delivery of precise and considered solutions. Our team masters the latest web standards and technologies to ensure every project is technically secure, optimized, and future-proof. Meticulous attention to detail and adherence to the principles of sustainable design form the core of our commitment to quality. Ultimately, our goal is to create digital products that not only meet the needs of today but also serve as a valuable and lasting asset for tomorrow."
-
+        about_explain: "LUNOTECH stands at the intersection of cosmic exploration and technological innovation...",
+    about_section: {
+        tagline: "Who We Are",
+        title: "Architects of Digital Identity",
+        description: "Lunotech is a digital design studio dedicated to building purposeful and integrated digital identities. We believe a successful digital experience is the result of the intelligent intersection of aesthetics, flawless functionality, and transparent strategy.",
+        principles: [
+            {
+                icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.636-6.364l.707.707M19.071 4.929l.707-.707M12 21a9 9 0 110-18 9 9 0 010 18z"></path></svg>`,
+                title: "Strategy-Driven Design",
+                description: "We don't just build; we architect. Every project begins with a deep dive into your goals to ensure the final product is a powerful business tool."
+            },
+            {
+                icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7-7 7zM3 10v4a2 2 0 002 2h4M3 10V6a2 2 0 012-2h4"></path></svg>`,
+                title: "Pixel-Perfect Execution",
+                description: "Our passion for detail means your digital identity will be crafted with precision, ensuring a flawless and premium user experience on every device."
+            },
+            {
+                icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>`,
+                title: "Future-Proof Technology",
+                description: "We build with modern, scalable technologies to create solutions that are not only effective today but are also ready for the challenges of tomorrow."
+            }
+        ]
+    }
 
 
   },
@@ -422,9 +430,9 @@ const I18N = {
     developed:"توسعه توسط",
     credit_name:"آرش رسولی و امیر کریمی",
     social_github:"گیت هاب",
-    social_telegram:"تلگرام",   
+    social_telegram:"تلگرام",
     social_instagram:"اینستاگرام",
-    social_linkedin:"لینکدین",  
+    social_linkedin:"لینکدین",
     social_whatsapp:"واتساپ",
     hero_title:"نوآوری، فراتر از مرزهای دیجیتال",
     hero_description:"ایده‌های شما در کنار تخصص و تکنولوژی ما، به ستاره ای روشن در آسمان دیجیتال تبدیل میشود",
@@ -527,9 +535,29 @@ const I18N = {
     message_placeholder:"پیام شما",
     search_placeholder:"جستجو",
     section_title_about:"درباره ما",
-    section_subtitle_about:"",
-    about_explain:"لونوتک یک گروه طراحی دیجیتال است که به ساخت و توسعه هویت‌های دیجیتال هدفمند و یکپارچه اختصاص دارد. فعالیت‌های ما دو حوزه اصلی را در بر می‌گیرد: معماری برند و توسعه وب، که از طریق آن‌ها به کسب‌وکارها برای ایجاد یک حضور آنلاین معتبر و تأثیرگذار کمک می‌کنیم. ما خدمات جامعی از تعریف استراتژی برند، طراحی لوگو و تدوین برندبوک گرفته تا طراحی دقیق رابط و تجربه کاربری (UI/UX) و پیاده‌سازی وب‌سایت‌های پیچیده و سفارشی را ارائه می‌دهیم. ما باور داریم که یک تجربه دیجیتال موفق، حاصل تلاقی هوشمندانه زیبایی‌شناسی، کارایی بی‌نقص و استراتژی شفاف است. رویکرد ما در هر پروژه، یک فرآیند مبتنی بر تحقیق و همکاری است که با درک عمیق اهداف کارفرما آغاز شده و با ارائه راه‌حل‌های سنجیده به پایان می‌رسد. تیم ما بر جدیدترین استانداردها و تکنولوژی‌های وب تسلط دارد تا اطمینان حاصل شود هر پروژه از نظر فنی، امن، بهینه و آماده برای آینده است. توجه دقیق به جزئیات و پایبندی به اصول طراحی پایدار، هسته اصلی تعهد ما به کیفیت است. در نهایت، هدف ما خلق محصولاتی دیجیتال است که نه تنها نیازهای امروز را برآورده می‌کنند، بلکه به عنوان یک دارایی ارزشمند و ماندگار برای فردا نیز عمل می‌نمایند."
-
+    about_explain: "لونوتک در نقطه تلاقی کاوش‌های کیهانی و نوآوری تکنولوژیک ایستاده است...",
+    about_section: {
+        tagline: "ما که هستیم",
+        title: "معماران هویت دیجیتال",
+        description: "لونوتک یک گروه طراحی دیجیتال است که به ساخت و توسعه هویت‌های دیجیتال هدفمند و یکپارچه اختصاص دارد. ما باور داریم که یک تجربه دیجیتال موفق، حاصل تلاقی هوشمندانه زیبایی‌شناسی، کارایی بی‌نقص و استراتژی شفاف است.",
+        principles: [
+            {
+                icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.636-6.364l.707.707M19.071 4.929l.707-.707M12 21a9 9 0 110-18 9 9 0 010 18z"></path></svg>`,
+                title: "طراحی استراتژی-محور",
+                description: "ما فقط نمی‌سازیم؛ ما معماری می‌کنیم. هر پروژه با درک عمیق اهداف شما آغاز می‌شود تا اطمینان حاصل شود محصول نهایی یک ابزار قدرتمند تجاری است."
+            },
+            {
+                icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7-7 7zM3 10v4a2 2 0 002 2h4M3 10V6a2 2 0 012-2h4"></path></svg>`,
+                title: "اجرای بی‌نقص و دقیق",
+                description: "علاقه ما به جزئیات به این معناست که هویت دیجیتال شما با دقتی بی‌نظیر ساخته می‌شود و تجربه‌ای ممتاز و بی‌نقص را در هر دستگاهی تضمین می‌کند."
+            },
+            {
+                icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>`,
+                title: "تکنولوژی آینده-نگر",
+                description: "ما با تکنولوژی‌های مدرن و مقیاس‌پذیر می‌سازیم تا راه‌حل‌هایی ایجاد کنیم که نه تنها امروز مؤثر هستند، بلکه برای چالش‌های فردا نیز آماده‌اند."
+            }
+        ]
+    }
   },
 };
 
@@ -586,16 +614,18 @@ class GlassmorphismHeader {
     }
   }
 
-
-
-
-
-
-
-
   applyLanguage(lang) {
     // Direction + attrs
     this.setDirFor(lang);
+
+    // --- Dynamic Content Population ---
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const value = key.split('.').reduce((obj, k) => obj && obj[k], I18N[lang]);
+      if (value) {
+        el.innerHTML = value;
+      }
+    });
 
     // Desktop nav items by order: Home, About, Services, Blog
     const desktopItems = document.querySelectorAll(".nav-items .nav-item");
@@ -614,18 +644,18 @@ class GlassmorphismHeader {
     // Contact buttons
     document.querySelectorAll(".contact-btn").forEach((b) => (b.textContent = I18N[lang].contact));
     document.querySelectorAll(".mobile-contact-btn").forEach((b) => (b.textContent = I18N[lang].contact));
-    document.querySelectorAll(".cta-text").forEach((b) => (b.textContent = I18N[lang].cta_text)); 
-    document.querySelectorAll(".developed").forEach((b) => (b.textContent = I18N[lang].developed));     
+    document.querySelectorAll(".cta-text").forEach((b) => (b.textContent = I18N[lang].cta_text));
+    document.querySelectorAll(".developed").forEach((b) => (b.textContent = I18N[lang].developed));
     document.querySelectorAll(".credit-name").forEach((b) => (b.textContent = I18N[lang].credit_name));
     document.querySelectorAll(".social_Instagram").forEach((b) => (b.textContent = I18N[lang].social_instagram));
     document.querySelectorAll(".social_github").forEach((b) => (b.textContent = I18N[lang].social_github));
     document.querySelectorAll(".social_Telegram").forEach((b) => (b.textContent = I18N[lang].social_telegram));
     document.querySelectorAll(".social_linkedin").forEach((b) => (b.textContent = I18N[lang].social_linkedin));
-    document.querySelectorAll(".social_whatsapp").forEach((b) => (b.textContent = I18N[lang].social_whatsapp));    
-    document.querySelectorAll(".hero-title").forEach((b) => (b.textContent = I18N[lang].hero_title));    
+    document.querySelectorAll(".social_whatsapp").forEach((b) => (b.textContent = I18N[lang].social_whatsapp));
+    document.querySelectorAll(".hero-title").forEach((b) => (b.textContent = I18N[lang].hero_title));
     document.querySelectorAll(".hero-description").forEach((b) => (b.textContent = I18N[lang].hero_description));
-    document.querySelectorAll(".header_services_title").forEach((b) => (b.textContent = I18N[lang].header_services_title));    
-    document.querySelectorAll(".header_services_discription").forEach((b) => (b.textContent = I18N[lang].header_services_discription));    
+    document.querySelectorAll(".header_services_title").forEach((b) => (b.textContent = I18N[lang].header_services_title));
+    document.querySelectorAll(".header_services_discription").forEach((b) => (b.textContent = I18N[lang].header_services_discription));
     document.querySelectorAll(".grok-blog-main-title").forEach((b) => (b.textContent = I18N[lang].blog_title));
     document.querySelectorAll(".grok-blog-explore-btn").forEach((b) => (b.textContent = I18N[lang].blog_btn));
     document.querySelectorAll(".grok-blog-read-btn").forEach((b) => (b.textContent = I18N[lang].blog_read_btn));
@@ -642,6 +672,8 @@ class GlassmorphismHeader {
     document.querySelectorAll(".section-title-about").forEach((b) => (b.textContent = I18N[lang].section_title_about));
     document.querySelectorAll(".section-subtitle-about").forEach((b) => (b.textContent = I18N[lang].section_subtitle_about));
     document.querySelectorAll(".about_explain").forEach((b) => (b.textContent = I18N[lang].about_explain));
+    document.body.style.cssText = (lang === 'fa') ? "font-family: koodak;" : "font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;";
+
 
 
 
@@ -668,29 +700,26 @@ class GlassmorphismHeader {
     );
     document.querySelectorAll("#id_message").forEach(
       (inp) => (inp.placeholder = I18N[lang].message_placeholder)
-    ); 
+    );
     document.querySelectorAll("#searchInput").forEach(
       (inp) => (inp.placeholder = I18N[lang].search_placeholder)
-    ); 
+    );
 
 
     document.querySelectorAll(".logo-img").forEach((img) => img.style.transform = (lang === "fa") ? "scaleX(-1)" : "scaleX(1)");
-    document.body.style.cssText = (lang === 'fa') ? "font-family: koodak;" : "font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;";
 
 
-    
+
     // Persist
     localStorage.setItem("siteLang", lang);
 
     // Update labels on triggers
     this.syncTriggersLabel();
     this.renderServices(lang);
+    
 
   }
-  
 
-
-  
 renderServices(lang) {
   const grid = document.getElementById("servicesGrid");
   if (!grid) return;
@@ -718,17 +747,12 @@ renderServices(lang) {
   });
 }
 
-
-
-
-
-
-
   changeLanguage(lang) {
     if (lang !== "fa" && lang !== "en") lang = "en";
     this.lang = lang;
     this.applyLanguage(lang);
   }
+
 
   bindEvents() {
     // Desktop navigation items (active highlight)
@@ -1229,20 +1253,6 @@ document.querySelectorAll(".grok-blog-post").forEach((post) => {
   observer.observe(post);
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class BlogPage {
     constructor() {
         this.allPosts = [];        // array of { node, id, title, excerpt, category, tags[], publishDate, views, likes, comments, bookmarked }
@@ -1523,4 +1533,3 @@ class BlogPage {
 document.addEventListener('DOMContentLoaded', () => {
     new BlogPage();
 });
-

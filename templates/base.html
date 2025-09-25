@@ -99,8 +99,8 @@
 
                     <div class="mobile-nav-items">
                         <a class="mobile-nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
-                        <a class="mobile-nav-item {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="">About</a>
-                        <a class="mobile-nav-item {% if request.resolver_match.url_name == 'services' %}active{% endif %}" href="">Services</a>
+                        <a class="mobile-nav-item" href="{% url 'home' %}#about">About</a>
+                        <a class="mobile-nav-item" href="{% url 'home' %}#services">Services</a>
                         <a class="mobile-nav-item {% if request.resolver_match.url_name == 'blog_list' %}active{% endif %}" href="{% url 'blog_list' %}">Blog</a>
                     </div>
 

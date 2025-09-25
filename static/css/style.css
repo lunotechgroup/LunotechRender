@@ -5,6 +5,7 @@
 html {
   scroll-behavior: smooth;
 }
+
         /* Base styles from original CSS */
         * {
             margin: 0;
@@ -13,7 +14,7 @@ html {
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #000;
             color: #fff;
             overflow-x: hidden;
@@ -800,7 +801,7 @@ html {
 
         .services-section {
   position: relative;
-  padding: 3rem 1.5rem;
+  padding: 6rem 1.5rem;
   overflow: hidden;
   min-height: 10vh;
 
@@ -2555,7 +2556,7 @@ html {
           color: white;
         }
         .main-container-blog{
-          margin-top: 10rem;
+          margin-top: 6rem;
         }
 /* --- Multilingual Content Switcher --- */
 
@@ -2575,16 +2576,131 @@ html[lang="en"] .lang-fa {
 }
 
 .hero-section::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 200px; 
-    background: radial-gradient(ellipse at bottom,
-                rgba(255, 255, 255, 0.25) 0%,
-                rgba(255, 255, 255, 0.05) 50%,
-                rgba(0, 0, 0, 0) 100%);
-    pointer-events: none;
-    z-index: 5; 
+  content: "";
+  position: absolute;
+  bottom: -5px; /* Sits just below to hide the hard edge */
+  left: 0;
+  width: 100%;
+  height: 250px; /* Adjust height of the fog as needed */
+  background: linear-gradient(to top, #000 20%, transparent);
+  z-index: 5; /* Ensures it's above the 3D canvas but below UI text */
+  pointer-events: none; /* Allows clicks to pass through */
+}
+
+
+/* static/css/style.css */
+
+/* --- New About Section --- */
+.about-section {
+  padding: 5rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 4rem;
+}
+
+@media (min-width: 992px) {
+  .about-content-grid {
+      grid-template-columns: 1fr 1fr;
+  }
+}
+
+.about-text-content {
+  position: relative;
+  z-index: 10;
+}
+
+.about-tagline {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #a78bfa;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.about-title {
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.about-description {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.8;
+}
+
+.about-visual-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 350px;
+  position: relative;
+}
+
+.orbital-rings {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  transform-style: preserve-3d;
+}
+
+.ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  box-shadow: 
+      inset 0 0 10px rgba(255, 255, 255, 0.05),
+      0 0 20px rgba(167, 139, 250, 0.1);
+}
+
+.ring-1 {
+  animation: rotate-orbit 20s linear infinite;
+}
+
+.ring-2 {
+  transform: rotateX(65deg) rotateZ(30deg);
+  animation: rotate-orbit 25s linear infinite reverse;
+}
+
+.ring-3 {
+  transform: rotateX(65deg) rotateZ(-30deg);
+  animation: rotate-orbit 30s linear infinite;
+}
+
+.ring-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.4) 0%, rgba(167, 139, 250, 0) 70%);
+  border-radius: 50%;
+}
+
+@keyframes rotate-orbit {
+  from {
+      transform: rotateZ(0deg) rotateX(65deg) rotateY(0deg);
+  }
+  to {
+      transform: rotateZ(0deg) rotateX(65deg) rotateY(360deg);
+  }
 }
