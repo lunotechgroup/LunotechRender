@@ -1,0 +1,20 @@
+{
+    "platform": "django",
+    "django": {
+      "pythonVersion": "3.11"
+    },
+    "disks": [
+      {
+        "name": "database",
+        "mountTo": "/data"
+      },
+      {
+        "name": "media",
+        "mountTo": "/media_data"
+      },
+      {
+        "name": "static",
+        "mountTo": "staticfiles"
+      }
+    ]
+  }

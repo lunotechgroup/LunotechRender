@@ -1,5 +1,23 @@
-Lunotech
-main
-media
+# --- Environment ---
+# Ignore the .env file to keep secrets and local configurations out of version control.
+.env
+
+# --- Python ---
+# Ignore Python bytecode and compiled files.
+__pycache__/
+*.pyc
+
+# --- Database ---
+# Ignore the local SQLite database file.
 db.sqlite3
-manage.py
+
+# --- Django ---
+# Ignore the directory where user-uploaded media files are stored locally.
+# The 'media' folder on Liara will be on a persistent disk.
+/media/
+
+# --- Editor & OS Files ---
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
