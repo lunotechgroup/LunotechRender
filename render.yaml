@@ -1,0 +1,27 @@
+# render.yaml
+
+services:
+  # A PostgreSQL database
+  - name: lunotech-db
+    type: pserv
+    plan: free # You can change this to a paid plan later
+    postgres:
+      version: "14"
+
+  # The Django web service
+  - name: lunotech-web
+    type: web
+    plan: free # You can change this to a paid plan later
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn Lunotech.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: lunotech-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true # Render will generate a random, secure key
+      - key: WEB_CONCURRENCY
+        value: 4

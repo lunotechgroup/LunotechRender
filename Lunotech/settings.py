@@ -1,18 +1,7 @@
-# settings.py
-
-"""
-Django settings for Lunotech project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/stable/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/stable/ref/settings/
-"""
-
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -106,10 +95,10 @@ else:
     DB_PATH = BASE_DIR / 'db.sqlite3'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': DB_PATH,
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
 }
 
 
@@ -149,10 +138,7 @@ MEDIA_URL = '/media/'
 
 # The absolute path to the folder where media files will be stored.
 # On Liara, this will point to a persistent disk.
-if os.getenv('LIARA_ENVIRONMENT') == 'production':
-    MEDIA_ROOT = '/media_data'
-else:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # --- SECURITY SETTINGS for Production ---
