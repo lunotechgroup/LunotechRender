@@ -33,15 +33,13 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 # --- APPLICATION DEFINITION ---
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic', # <-- Make this the first app in the list
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic',  # For serving static files efficiently
     'django.contrib.staticfiles',
-    # Add your own apps for Lunotech here
-    # 'my_app',
     'main',
     'tinymce',
 ]
